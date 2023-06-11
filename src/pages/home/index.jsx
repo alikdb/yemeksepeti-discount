@@ -7,7 +7,8 @@ const Home = () => {
 
   const [loading, setLoading] = useState(true)
   const [categories, setCategories] = useState([])
-  const [items, setItems] = useState([])
+  const [filtredItems, setFiltredItems] = useState([])
+  const [items, setItems] = useState([]);
 
   const [selectedCategory, setSelectedCategory] = useState(null)
 
@@ -18,11 +19,27 @@ const Home = () => {
     }
     setSelectedCategory(category)
   }
+  const filterItems = (e) => {
+    const value = e.target.value;
+    if (value.length < 3) {
+      setFiltredItems(items)
+      return
+    }
+    const copiedItems = items.map((item) => ({ ...item, items: [...item.items] })); // items dizisini kopyalama
+    const filtered = copiedItems.filter((item) => {
+      item.items = item.items.filter((subItem) => {
+        return subItem.name.toLowerCase().includes(value.toLowerCase())
+      })
+      return item.items.length > 0
+    })
+    setFiltredItems(filtered)
+  }
 
   useEffect(() => {
     getDiscount().then((response) => {
       const dataItems = response.feed.items[0].items;
       setItems(dataItems);
+      setFiltredItems(dataItems)
       const currentCategories = [];
       dataItems.map((item) => {
         currentCategories.push(item.headline);
@@ -40,18 +57,28 @@ const Home = () => {
 
           {loading && <ReactLoading type="spin" color="#fff" height={100} width={100} />}
 
+          {!loading && (
+            <div className="w-full flex justify-center">
+              <input
+                type="text"
+                className="h-10  bg-zinc-600 text-white border border-zinc-400 outline-none px-5 max-w-10"
+                onChange={(e) => filterItems(e)}
+                placeholder="Ürün ara.."
+              />
+            </div>
+          )}
           {!loading && categories.map((category, index) => (
             <button
               key={index}
               className={classNames("bg-zinc-500 text-sm px-5 py-2 rounded font-light text-white hover:bg-zinc-600", {
-                'bg-zinc-600': selectedCategory == category
+                'bg-red-600': selectedCategory == category
               })}
               onClick={() => clickCategory(category)}
             >{category}</button>
           ))}
         </div>
         {!loading && <hr />}
-        {!loading && items.map((item, index) => {
+        {!loading && filtredItems.map((item, index) => {
           if (selectedCategory && selectedCategory != item.headline) {
             return null
           }

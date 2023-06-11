@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types'
 export default function ItemCard({ item }) {
+
+  const percent = Math.round((item.original_price - item.price) / item.original_price * 100)
+
   return (
     <div>
 
@@ -12,6 +15,12 @@ export default function ItemCard({ item }) {
           <span className="text-sm text-gray-500 line-through font-light"> {item.original_price} TL </span>
         ) : null}
       </div>
+      {item.price != item.original_price ? (
+        <div className="w-full">
+          <span className="bg-red-700 text-xs py-1 px-2 rounded-full font-bold"> %{percent} İndirim </span>
+        </div>
+      ) : null}
+
       <div className="w-full">
         <span className="text-sm text-gray-500 font-light"> {item.name} </span>
       </div>
