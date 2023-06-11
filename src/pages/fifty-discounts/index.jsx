@@ -35,7 +35,7 @@ export default function FiftyDiscounts() {
 
   return (
     <>
-      <div className="container mx-auto">
+      <div className="container mx-auto px-5">
         <div className="flex flex-wrap gap-5 justify-center my-5">
 
           {loading && <ReactLoading type="spin" color="#fff" height={100} width={100} />}
@@ -51,8 +51,7 @@ export default function FiftyDiscounts() {
           ))}
         </div>
 
-        <hr />
-
+        {!loading && <hr />}
 
         {!loading && items.map((item, index) => {
           if (selectedCategory && selectedCategory != item.headline) {
@@ -61,7 +60,7 @@ export default function FiftyDiscounts() {
           return (
             <div key={index + "a"}>
               <div className="w-full bg-zinc-500 p-5 my-5">{item.headline}</div>
-              <div className="grid grid-cols-5 gap-5">
+              <div className="grid md:grid-cols-3 lg:grid-cols-5 grid-cols-2 gap-5">
                 {item.items.map((item, index) => (
 
                   <ItemCard key={index} item={item} />
