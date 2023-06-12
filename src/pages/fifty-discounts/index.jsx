@@ -37,14 +37,17 @@ const FiftyDiscounts = () => {
 
   useEffect(() => {
     getFifty().then((response) => {
-      const dataItems = response.feed.items[0].items;
-      setItems(dataItems);
-      setFiltredItems(dataItems)
-      const currentCategories = [];
-      dataItems.map((item) => {
-        currentCategories.push(item.headline);
-      })
-      setCategories(currentCategories);
+      if (response.feed.items.length > 0) {
+        const dataItems = response.feed.items[0].items;
+        setItems(dataItems);
+        setFiltredItems(dataItems)
+        const currentCategories = [];
+        dataItems.map((item) => {
+          currentCategories.push(item.headline);
+        })
+        setCategories(currentCategories);
+      }
+
       setLoading(false)
     })
   }, [])
@@ -78,6 +81,13 @@ const FiftyDiscounts = () => {
           ))}
         </div>
         {!loading && <hr />}
+
+        {!loading && filtredItems.length == 0 && (
+          <div className="w-full flex items-center rounded justify-center my-5 bg-red-500 h-12">
+            Bu katagoride ürün bulunamadı.
+          </div>
+        )}
+
         {!loading && filtredItems.map((item, index) => {
           if (selectedCategory && selectedCategory != item.headline) {
             return null
@@ -90,14 +100,9 @@ const FiftyDiscounts = () => {
                   <ItemCard key={index} item={item} />
                 ))}
               </div>
-
-
-
             </div>
           )
         })}
-
-
       </div>
 
     </>
