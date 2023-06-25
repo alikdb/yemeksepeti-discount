@@ -3,5 +3,16 @@
 @tailwind utilities;
 
 body {
-    @apply bg-zinc-900 text-white
+  @apply bg-zinc-900 text-white;
+}
+
+.LazyLoad {
+  opacity: 0;
+  filter: blur(10px); /* İlk başta blurlu hali */
+  transition: all 0.5s ease-in-out;
+}
+
+.is-visible {
+  opacity: 1;
+  filter: blur(0); /* Resim yüklendikten sonra blursuz hali */
 }
